@@ -1,28 +1,28 @@
-import express, { Request, Response } from "express"
-import jwt from "jsonwebtoken"
-import { body } from "express-validator"
+import express, { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
+import { body } from 'express-validator'
 
-import { User } from "../models/User"
-import { BadRequestError } from "../errors/bad-request-error"
-import { validationRequest } from "../middlewares/validate-request"
+import { User } from '../models/User'
+import { BadRequestError } from '../errors/bad-request-error'
+import { validationRequest } from '../middlewares/validate-request'
 
 const router = express.Router()
 
 router.post(
-  "/api/users/signup",
+  '/api/users/signup',
   [
-    body("email").isEmail().withMessage("Email is not valid"),
-    body("password")
+    body('email').isEmail().withMessage('Email is not valid'),
+    body('password')
       .trim()
       .isLength({ min: 6, max: 20 })
-      .withMessage("Password must be between  6 and 20 character"),
+      .withMessage('Password must be between  6 and 20 character'),
   ],
   validationRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body
     const existingUser = await User.findOne({ email })
     if (existingUser) {
-      throw new BadRequestError("Email already in use")
+      throw new BadRequestError('Email already in use!')
     }
 
     const user = User.build({
